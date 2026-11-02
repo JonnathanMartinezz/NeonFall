@@ -131,6 +131,16 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""Interactuar"",
+                    ""type"": ""Button"",
+                    ""id"": ""db52be4e-b6a5-4f2c-bba7-f3611621a8f2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -221,6 +231,17 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
                     ""action"": ""Disparo"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37d25813-c4de-4068-a6f3-b4d05c2d20ef"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interactuar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -233,6 +254,7 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
         m_Personaje_Saltar = m_Personaje.FindAction("Saltar", throwIfNotFound: true);
         m_Personaje_Mirar = m_Personaje.FindAction("Mirar", throwIfNotFound: true);
         m_Personaje_Disparo = m_Personaje.FindAction("Disparo", throwIfNotFound: true);
+        m_Personaje_Interactuar = m_Personaje.FindAction("Interactuar", throwIfNotFound: true);
     }
 
     ~@Acciones()
@@ -317,6 +339,7 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
     private readonly InputAction m_Personaje_Saltar;
     private readonly InputAction m_Personaje_Mirar;
     private readonly InputAction m_Personaje_Disparo;
+    private readonly InputAction m_Personaje_Interactuar;
     /// <summary>
     /// Provides access to input actions defined in input action map "Personaje".
     /// </summary>
@@ -344,6 +367,10 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Personaje/Disparo".
         /// </summary>
         public InputAction @Disparo => m_Wrapper.m_Personaje_Disparo;
+        /// <summary>
+        /// Provides access to the underlying input action "Personaje/Interactuar".
+        /// </summary>
+        public InputAction @Interactuar => m_Wrapper.m_Personaje_Interactuar;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -382,6 +409,9 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
             @Disparo.started += instance.OnDisparo;
             @Disparo.performed += instance.OnDisparo;
             @Disparo.canceled += instance.OnDisparo;
+            @Interactuar.started += instance.OnInteractuar;
+            @Interactuar.performed += instance.OnInteractuar;
+            @Interactuar.canceled += instance.OnInteractuar;
         }
 
         /// <summary>
@@ -405,6 +435,9 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
             @Disparo.started -= instance.OnDisparo;
             @Disparo.performed -= instance.OnDisparo;
             @Disparo.canceled -= instance.OnDisparo;
+            @Interactuar.started -= instance.OnInteractuar;
+            @Interactuar.performed -= instance.OnInteractuar;
+            @Interactuar.canceled -= instance.OnInteractuar;
         }
 
         /// <summary>
@@ -473,5 +506,12 @@ public partial class @Acciones: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDisparo(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Interactuar" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteractuar(InputAction.CallbackContext context);
     }
 }

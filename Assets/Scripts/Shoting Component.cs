@@ -8,6 +8,9 @@ public class ShotingComponent : MonoBehaviour
     public float velocidadProyectil = 60f;
     public float cooldown = 0.3f;
 
+    public AudioSource audioSource;
+    public AudioClip ClipDisparar;
+
     private Acciones controles;
     private float ultimoDisparo = -999f;
 
@@ -22,6 +25,11 @@ public class ShotingComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (TrampolinMovable.EstaManipulando)
+        {
+            return;
+        }
+
         if (controles.Personaje.Disparo.WasPressedThisFrame() && Time.time >= ultimoDisparo + cooldown)
         {
             Disparar();
@@ -34,5 +42,7 @@ public class ShotingComponent : MonoBehaviour
         GameObject proyectil = Instantiate(proyectilPrefab, puntoDisparo.position, puntoDisparo.rotation);
         Rigidbody rb = proyectil.GetComponent<Rigidbody>();
         rb.linearVelocity = puntoDisparo.forward * velocidadProyectil;
+        audioSource.clip = ClipDisparar;
+        audioSource.Play();
     }
 }
