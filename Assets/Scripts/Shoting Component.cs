@@ -25,11 +25,6 @@ public class ShotingComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (TrampolinMovable.EstaManipulando)
-        {
-            return;
-        }
-
         if (controles.Personaje.Disparo.WasPressedThisFrame() && Time.time >= ultimoDisparo + cooldown)
         {
             Disparar();

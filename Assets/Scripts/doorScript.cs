@@ -70,12 +70,4 @@ public class doorScript : MonoBehaviour
         audioSource.clip = ClipClose;
         audioSource.Play();
     }
-
-    public void RelockDoor()
-    {
-        locked = true;
-        transform.position = posicionInicial;
-        posicionObjetivo = posicionInicial;
-        this.GetComponent<Renderer>().material = lockedDoorMaterial;
-    }
 }

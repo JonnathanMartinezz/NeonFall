@@ -40,12 +40,20 @@ public class DoorUnlockTrigger : MonoBehaviour
         if (golpesRecibidos == 1)
         {
             AplicarMaterial(materialPrimerGolpe);
+            if (golpesRecibidos >= golpesParaDestruir)
+            {
+                Destruir();
+            }
             return;
         }
 
         if (golpesRecibidos == 2)
         {
             AplicarMaterial(materialSegundoGolpe);
+            if (golpesRecibidos >= golpesParaDestruir)
+            {
+                Destruir();
+            }
             return;
         }
 

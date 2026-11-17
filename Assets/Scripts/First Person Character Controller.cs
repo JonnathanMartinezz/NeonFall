@@ -1,4 +1,7 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
 {
@@ -25,6 +28,10 @@ public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
 
     private Vector2 mirarSuavizado;
 
+    public float salud = 100;
+
+    public TextMeshProUGUI textoSalud;
+
     private void Awake()
     {
         controles = new Acciones();
@@ -43,8 +50,15 @@ public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.name == "Picable")
+        {
+            salud += 10;
+            Destroy(other.gameObject);
+        }
+
         if (other.CompareTag("DeathFloor"))
         {
+            RestarSalud(50);
             Respawn();
         }
     }
@@ -78,11 +92,6 @@ public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
         ultimoRespawn = Time.time;
         velocidadVertical = Vector3.zero;
 
-        if (GestorReinicioNivel.Instancia != null)
-        {
-            GestorReinicioNivel.Instancia.ReiniciarNivel();
-        }
-
         characterController.enabled = false;
         transform.SetPositionAndRotation(puntoRespawn, rotacionRespawn);
         characterController.enabled = true;
@@ -91,6 +100,8 @@ public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
     // Update is called once per frame
     void Update()
     {
+        textoSalud.text = "" + salud;
+
         bool estaEnSuelo = characterController.isGrounded;
 
         //Mirar
@@ -123,26 +134,30 @@ public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
 
         velocidadVertical.y += gravedad * Time.deltaTime;
 
-        bool interactuarPresionado = controles.Personaje.Interactuar.IsPressed();
-        TrampolinMovable.ActualizarEstadoManipulacion(transform, interactuarPresionado);
-
-        if (estaEnSuelo && controles.Personaje.Saltar.WasPressedThisFrame() && !TrampolinMovable.EstaManipulando)
+        if (estaEnSuelo && controles.Personaje.Saltar.WasPressedThisFrame())
         {
             velocidadVertical.y = velocidadSalto;
         }
 
         characterController.Move(velocidadVertical * Time.deltaTime);
-
-        TrampolinMovable.NotificarMovimientoJugador(transform, movimientoHorizontal, interactuarPresionado);
     }
 
     public void AplicarImpulso(float fuerza)
     {
-        if (TrampolinMovable.EstaManipulando)
-        {
-            return;
-        }
-
         velocidadVertical.y = fuerza;
+    }
+
+    public void RestarSalud(float danio)
+    {
+        salud -= danio;
+        EvaluarVida();
+    }
+
+    public void EvaluarVida()
+    {
+        if (salud <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
