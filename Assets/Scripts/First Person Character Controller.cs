@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -32,6 +33,16 @@ public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
 
     public TextMeshProUGUI textoSalud;
 
+    public GameObject panelMensajeNarrativo;
+    public TextMeshProUGUI textoMensajeNarrativo;
+    public float duracionMensajeNarrativo = 10f;
+
+    [TextArea(2, 5)]
+    public string mensajeExtraccion =
+        "Con la energía suficiente logras contactar con tu tropa, la cual va camino a tu dirección. Mantente a salvo en espera de tu extracción.";
+
+    private Coroutine ocultarMensajeCoroutine;
+
     private void Awake()
     {
         controles = new Acciones();
@@ -61,12 +72,56 @@ public class FirstPersonCharacterController : MonoBehaviour, IEmpujable
             RestarSalud(50);
             Respawn();
         }
+
+        if (other.name == "ThunderTP")
+        {
+            MostrarMensajeNarrativo();
+            Destroy(other.gameObject);
+        }
     }
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         ConfigurarPuntoRespawn();
+
+        if (panelMensajeNarrativo != null)
+        {
+            panelMensajeNarrativo.SetActive(false);
+        }
+    }
+
+    private void MostrarMensajeNarrativo()
+    {
+        if (panelMensajeNarrativo == null)
+        {
+            return;
+        }
+
+        if (textoMensajeNarrativo == null)
+        {
+            textoMensajeNarrativo = panelMensajeNarrativo.GetComponentInChildren<TextMeshProUGUI>(true);
+        }
+
+        if (textoMensajeNarrativo != null)
+        {
+            textoMensajeNarrativo.text = mensajeExtraccion;
+        }
+
+        panelMensajeNarrativo.SetActive(true);
+
+        if (ocultarMensajeCoroutine != null)
+        {
+            StopCoroutine(ocultarMensajeCoroutine);
+        }
+
+        ocultarMensajeCoroutine = StartCoroutine(OcultarMensajeNarrativo());
+    }
+
+    private IEnumerator OcultarMensajeNarrativo()
+    {
+        yield return new WaitForSeconds(duracionMensajeNarrativo);
+        panelMensajeNarrativo.SetActive(false);
     }
 
     private void ConfigurarPuntoRespawn()
